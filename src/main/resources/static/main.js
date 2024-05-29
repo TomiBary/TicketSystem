@@ -71,8 +71,8 @@ function getFirstTicket() {
     fetchFromApi("first", ticket => {
         modalBody.innerHTML = `
         Ticket ID: ${ticket.id}<br>
-        Vytvořeno: ${new Date(ticket.creationDateTime).toLocaleString()}<br>
-        Objednávka: ${ticket.order}
+        Creation Date & Time: ${new Date(ticket.creationDateTime).toLocaleString()}<br>
+        Order: ${ticket.order}
         `;
     });
 }
@@ -92,23 +92,14 @@ function deleteLastTicket() {
 
 document.querySelector('#create-ticket-btn').onclick = createTicket;
 document.querySelector('#delete-last-ticket-btn').onclick = deleteLastTicket;
-const getFirstBtn = document.getElementById('get-first-btn');
-const deleteFirstBtn = document.getElementById('delete-first-btn');
+document.getElementById('get-first-btn').onclick = getFirstTicket;
+document.getElementById('delete-first-btn').onclick = deleteFirstTicket;
 const timerPauseBtn = document.getElementById('timer-pause');
 
 timerPauseBtn.onclick = () => {
     isPaused = !isPaused
-    if(isPaused) {
-        timerPauseBtn.classList.replace('fa-pause', 'fa-play');
-        // timerPauseBtn.classList.remove('fa-pause')
-        // timerPauseBtn.classList.add('fa-play')
-    } else {
-        timerPauseBtn.classList.replace('fa-play', 'fa-pause');
-        // timerPauseBtn.classList.remove('fa-play')
-        // timerPauseBtn.classList.add('fa-pause')
-    }
+    timerPauseBtn.classList.replace(isPaused ? 'fa-pause' : 'fa-play', isPaused ? 'fa-play' : 'fa-pause');
 }
-getFirstBtn.onclick = getFirstTicket;
-deleteFirstBtn.onclick = deleteFirstTicket;
-const countdownInterval = setInterval(updateCountdown, updateIntervalSeconds * 1000)
+
+setInterval(updateCountdown, updateIntervalSeconds * 1000)
 getAllTickets()

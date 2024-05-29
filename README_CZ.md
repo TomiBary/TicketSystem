@@ -42,3 +42,5 @@
       - psano ve vanilla JS
 
 
+### Možná rozšíření
+- Namísto použití neperzistentní paměti se lístky ukládají do databáze (pro tento typ úlohy např. mybatis).

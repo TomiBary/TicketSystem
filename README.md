@@ -40,3 +40,7 @@
             - icon from [FontAwesome](https://fontawesome.com/)
         - [main.js](src/main/resources/static/main.js) (needs a few more modifications to be considered clean-code)
             - written in vanilla JS
+### Possible extensions
+### Možná rozšíření
+- Instead of using non-persistent memory, Tickets can be stored in the database. (e.g. mybatis for this type of task)
+

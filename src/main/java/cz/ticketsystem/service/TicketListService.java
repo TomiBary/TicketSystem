@@ -13,7 +13,7 @@ import java.util.Optional;
 @Primary
 public class TicketListService implements TicketService{
 
-  private LinkedList<Ticket> tickets = new LinkedList<>();
+  private final LinkedList<Ticket> tickets = new LinkedList<>();
   private int currentId = 0;
 
   @Override
@@ -25,21 +25,33 @@ public class TicketListService implements TicketService{
 
   @Override
   public Optional<TicketWithOrder> getFirst() {
+    if(tickets.isEmpty()) {
+      return Optional.empty();
+    }
     return Optional.of(tickets.getFirst().toTicketWithOrder(0));
   }
 
   @Override
   public Optional<TicketWithOrder> getFirstAndRemove() {
+    if(tickets.isEmpty()) {
+      return Optional.empty();
+    }
     return Optional.of(tickets.removeFirst().toTicketWithOrder(0));
   }
 
   @Override
   public Optional<TicketWithOrder> removeLast() {
+    if(tickets.isEmpty()) {
+      return Optional.empty();
+    }
     return Optional.of(tickets.removeLast().toTicketWithOrder(tickets.size()));
   }
 
   @Override
   public List<TicketWithOrder> getAllTickets() {
+    if(tickets.isEmpty()) {
+      return new LinkedList<>();
+    }
     // map all tickets to TicketWithOrder with order set to index in list
     int index = 0;
     List<TicketWithOrder> ticketsWithOrder = new LinkedList<>();
