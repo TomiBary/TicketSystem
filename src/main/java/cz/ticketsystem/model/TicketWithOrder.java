@@ -1,4 +1,4 @@
-package cz.moneta.ticketsystem.model;
+package cz.ticketsystem.model;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +10,7 @@ public class TicketWithOrder extends Ticket {
   private long order;
 
   protected TicketWithOrder(Ticket ticket, long order) {
-    super(ticket.getId());
+    super(ticket);
     this.order = order;
   }
 }

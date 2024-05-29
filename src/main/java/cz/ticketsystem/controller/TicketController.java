@@ -1,43 +1,49 @@
-package cz.moneta.ticketsystem.controller;
+package cz.ticketsystem.controller;
 
-import cz.moneta.ticketsystem.model.TicketWithOrder;
-import cz.moneta.ticketsystem.service.TicketService;
+import cz.ticketsystem.model.TicketWithOrder;
+import cz.ticketsystem.service.TicketService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/ticket")
 public class TicketController {
 
-  private final TicketService service;
+  private final TicketService ticketService;
 
   public TicketController(TicketService service) {
-    this.service = service;
+    this.ticketService = service;
   }
 
-  @GetMapping
+  @GetMapping("/all")
   public List<TicketWithOrder> getAllTickets() {
-    return service.getAllTicketsSorted();
+    return ticketService.getAllTickets();
   }
 
   @GetMapping("/create")
   public TicketWithOrder createTicket() {
-    return service.createNewTicket();
+    return ticketService.createNew();
   }
 
-  @GetMapping("/current")
-  public ResponseEntity<TicketWithOrder> getLowestTicket() {
-    Optional<TicketWithOrder> lowestTicket = service.getLowestTicket();
+  @GetMapping("/first")
+  public ResponseEntity<TicketWithOrder> getFirstTicket() {
+    Optional<TicketWithOrder> lowestTicket = ticketService.getFirst();
+    return lowestTicket.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+  }
+
+  @GetMapping("/deleteFirst")
+  public ResponseEntity<TicketWithOrder> getFirstAndDelete() {
+    Optional<TicketWithOrder> lowestTicket = ticketService.getFirstAndRemove();
     return lowestTicket.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
   }
 
   @GetMapping("/deleteLast")
   public ResponseEntity<TicketWithOrder> deleteLastTicket() {
-    Optional<TicketWithOrder> highestTicket = service.removeHighestTicket();
+    Optional<TicketWithOrder> highestTicket = ticketService.removeLast();
     return highestTicket.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
   }
 }

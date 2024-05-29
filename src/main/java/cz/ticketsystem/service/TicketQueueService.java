@@ -7,11 +7,13 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-public class TicketService {
+//@Primary
+public class TicketQueueService implements TicketService {
   private final PriorityQueue<Ticket> ticketQueue = new PriorityQueue<Ticket>(Comparator.comparingLong(Ticket::getId));
+  private int currentId = 0;
 
   // Přidá lístek s ID o 1 větším než nejvyšší ID
-  public TicketWithOrder createNewTicket() {
+  public TicketWithOrder createNew() {
     //TODO neziskavat highestId, ale udrzovat si interne ID vytvorenych Ticketu, ktere inkrementuje
     long highestId = getHighestTicketId();
     Ticket newTicket = new Ticket(highestId + 1);
@@ -41,7 +43,7 @@ public class TicketService {
   }
 
   // Odstraní lístek s největším ID a vrátí ho
-  public Optional<TicketWithOrder> removeHighestTicket() {
+  public Optional<TicketWithOrder> removeLast() {
     if (ticketQueue.isEmpty())
       return Optional.empty();
 
@@ -51,16 +53,16 @@ public class TicketService {
   }
 
   // Vrátí lístek s nejmenším ID
-  public Optional<TicketWithOrder> getLowestIdTicket() {
+  public Optional<TicketWithOrder> getFirst() {
     return ticketQueue.isEmpty() ? Optional.empty() : Optional.of(ticketQueue.peek().toTicketWithOrder(0));
   }
 
-  public Optional<TicketWithOrder> getAndRemoveLowestIdTicket() {
+  public Optional<TicketWithOrder> getFirstAndRemove() {
     return ticketQueue.isEmpty() ? Optional.empty() : Optional.of(ticketQueue.poll().toTicketWithOrder(0));
   }
 
   // Vrátí všechny lístky seřazené od nejmenšího ID
-  public List<TicketWithOrder> getAllTicketsSorted() {
+  public List<TicketWithOrder> getAllTickets() {
     if(ticketQueue.isEmpty()) {
       return Collections.emptyList();
     }
@@ -74,7 +76,7 @@ public class TicketService {
     return sortedTickets;
   }
 
-  public void clearQueue() {
+  public void removeAll() {
     ticketQueue.clear();
   }
 }

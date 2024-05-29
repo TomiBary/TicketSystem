@@ -1,16 +1,24 @@
-package cz.moneta.ticketsystem.model;
+package cz.ticketsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import java.util.Date;
+
+import java.time.LocalDateTime;
 
 @Data
 public class Ticket{
   private long id;
-  private Date creationDate;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
+  private LocalDateTime creationDateTime;
 
   public Ticket(long id) {
     this.id = id;
-    this.creationDate = new Date();
+    this.creationDateTime = LocalDateTime.now();
+  }
+
+  protected Ticket(Ticket other) {
+    this.id = other.id;
+    this.creationDateTime = other.creationDateTime;
   }
 
   public TicketWithOrder toTicketWithOrder(long order) {

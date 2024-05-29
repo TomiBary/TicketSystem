@@ -1,7 +1,8 @@
-package cz.moneta.ticketsystem;
+package cz.ticketsystem;
 
-import cz.moneta.ticketsystem.model.TicketWithOrder;
-import cz.moneta.ticketsystem.service.TicketService;
+import cz.ticketsystem.model.TicketWithOrder;
+import cz.ticketsystem.service.TicketQueueService;
+import cz.ticketsystem.service.TicketService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,54 +18,55 @@ class TicketSystemApplicationTests {
   private TicketService ticketService;
   @Test
   public void testCreateTicket() {
-
-    TicketWithOrder ticket_1 = ticketService.createNewTicket();
+    ticketService.removeAll();
+    TicketWithOrder ticket = ticketService.createNew();
 
     //Check if the ticket is created
-    long id = ticketService.getHighestTicketId();
-    assert ticket_1.getId() == id;
-    assert 1 == id;
-    assert ticket_1.getOrder() == 0;
+    long firstId = ticketService.getFirst().orElseThrow().getId();
+    long lastId = ticketService.removeLast().orElseThrow().getId();
+    assert lastId == firstId;
+    assert ticket.getId() == firstId;
+    assert ticket.getOrder() == 0;
   }
 
   @Test
-  public void testGetLowestTicket() {
-    createTickets();
+  public void testFirstTicket() {
+    ticketService.removeAll();
+    createTickets(REPEAT_COUNT);
 
     for (int i = 0; i < REPEAT_COUNT; i++) {
-      Optional<TicketWithOrder> lowestTicket = ticketService.getAndRemoveLowestTicket();
+      Optional<TicketWithOrder> lowestTicket = ticketService.getFirstAndRemove();
 
       assert lowestTicket.isPresent();
       assert lowestTicket.get().getOrder() == 0;
-      assert lowestTicket.get().getId() == i + 1;
     }
   }
 
   @Test
   public void testDeleteLastTicket() {
-    createTickets();
+    ticketService.removeAll();
+    createTickets(REPEAT_COUNT);
 
-    Optional<TicketWithOrder> highestTicket = ticketService.removeHighestTicket();
+    Optional<TicketWithOrder> highestTicket = ticketService.removeLast();
     assert highestTicket.isPresent();
     assert highestTicket.get().getOrder() == REPEAT_COUNT - 1;
-    assert highestTicket.get().getId() == REPEAT_COUNT;
-    assert ticketService.getAllTicketsSorted().size() == REPEAT_COUNT - 1;
+    assert ticketService.getAllTickets().size() == REPEAT_COUNT - 1;
   }
 
   @Test
-  public void testGetAllTicketsSorted() {
-    createTickets();
-    List<TicketWithOrder> allTickets = ticketService.getAllTicketsSorted();
+  public void testGetAllTickets() {
+    ticketService.removeAll();
+    createTickets(REPEAT_COUNT);
+    List<TicketWithOrder> allTickets = ticketService.getAllTickets();
 
     for (int i = 0; i < REPEAT_COUNT; i++) {
       assert allTickets.get(i).getOrder() == i;
-      assert allTickets.get(i).getId() == i + 1;
     }
   }
 
-  private void createTickets() {
-    for (int i = 0; i < REPEAT_COUNT; i++) {
-      ticketService.createNewTicket();
+  private void createTickets(int count) {
+    for (int i = 0; i < count; i++) {
+      ticketService.createNew();
     }
   }
 }
