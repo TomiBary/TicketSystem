@@ -35,12 +35,14 @@ public class TicketController {
     return lowestTicket.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
   }
 
+  // TODO: could be made as a delete method, but still... it is returning a TicketWithOrder
   @GetMapping("/deleteFirst")
   public ResponseEntity<TicketWithOrder> getFirstAndDelete() {
     Optional<TicketWithOrder> lowestTicket = ticketService.getFirstAndRemove();
     return lowestTicket.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
   }
 
+  // TODO: could be made as a delete method, but still... it is returning a TicketWithOrder
   @GetMapping("/deleteLast")
   public ResponseEntity<TicketWithOrder> deleteLastTicket() {
     Optional<TicketWithOrder> highestTicket = ticketService.removeLast();
