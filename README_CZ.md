@@ -44,3 +44,6 @@
 
 ### Možná rozšíření
 - Namísto použití neperzistentní paměti se lístky ukládají do databáze (pro tento typ úlohy např. mybatis).
+
+### Webová stránka klientské aplikace
+![Screenshot webové stránky index.html](screen_of_index_page.png)
