@@ -49,18 +49,7 @@ public class TicketListService implements TicketService{
 
   @Override
   public List<TicketWithOrder> getAllTickets() {
-    if(tickets.isEmpty()) {
-      return new LinkedList<>();
-    }
-    // map all tickets to TicketWithOrder with order set to index in list
-    int index = 0;
-    List<TicketWithOrder> ticketsWithOrder = new LinkedList<>();
-    for(Ticket ticket : tickets) {
-      ticketsWithOrder.add(ticket.toTicketWithOrder(index++));
-    }
-    return ticketsWithOrder;
-    // Too much computation
-    // return tickets.stream().map(ticket -> ticket.toTicketWithOrder(tickets.indexOf(ticket))).toList();
+     return tickets.stream().map(ticket -> ticket.toTicketWithOrder(tickets.indexOf(ticket))).toList();
   }
 
   @Override
